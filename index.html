@@ -60,7 +60,7 @@ h1 span { display: block; color: var(--lavender); font-style: italic; font-weigh
   transform-style: preserve-3d;
   /* Initial: classic 3-corner 3D view — face 1 front, face 3 top, face 2 right visible */
   transform: rotateX(-20deg) rotateY(30deg);
-  transition: transform 1.45s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .dice-face {
@@ -317,7 +317,6 @@ const COLORS = [
   { name: 'Jaune',       hex: '#f5d000' },
   { name: 'Orange',      hex: '#ff5e00' },
   { name: 'Terracotta',  hex: '#b55353' },
-  { name: 'Brique',      hex: '#b03828' },
   { name: 'Rose',        hex: '#f4a0b0' },
   { name: 'Framboise',   hex: '#c02858' },
   { name: 'Magenta',     hex: '#d01890' },
@@ -401,14 +400,14 @@ async function roll() {
 
   cube.style.transform = `rotateX(${cumX}deg) rotateY(${cumY}deg)`;
 
-  // Wait for CSS transition to settle (1.45s + small buffer)
-  await new Promise(r => setTimeout(r, 1550));
+  // Wait for CSS transition to settle (0.9s + small buffer)
+  await new Promise(r => setTimeout(r, 1000));
 
   playWin();
   spawnSparkles(wrapper);
 
   // Short breathe before cards appear
-  await new Promise(r => setTimeout(r, 220));
+  await new Promise(r => setTimeout(r, 100));
 
   // Build color cards
   const cardsArea = document.getElementById('cards-area');
