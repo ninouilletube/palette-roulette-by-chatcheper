@@ -34,6 +34,7 @@ h1 span { display: block; color: var(--lavender); font-style: italic; font-weigh
   width: 100%; max-width: 500px;
   display: flex; flex-direction: column; align-items: center;
   gap: 20px; margin-bottom: 6px;
+  position: relative;
 }
 
 .dice-wrapper {
@@ -123,6 +124,40 @@ h1 span { display: block; color: var(--lavender); font-style: italic; font-weigh
   transition: opacity 0.35s ease;
 }
 .dice-hint.hidden { opacity: 0; pointer-events: none; }
+
+/* ── Noir Toggle ── */
+.die-anchor {
+  position: relative; display: inline-flex;
+}
+.noir-toggle {
+  display: flex; align-items: center; gap: 6px;
+  position: absolute; top: -38px; left: calc(100% + 10px);
+}
+.noir-pastille {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: #111; flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.15);
+}
+.toggle-switch {
+  position: relative; display: inline-block;
+  width: 26px; height: 14px; cursor: pointer;
+}
+.toggle-switch input { display: none; }
+.toggle-track {
+  position: absolute; inset: 0; border-radius: 14px;
+  background: #ccc8c0;
+  transition: background 0.22s;
+}
+.toggle-track::after {
+  content: ''; position: absolute;
+  top: 2px; left: 2px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: white;
+  transition: transform 0.22s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+}
+.toggle-switch input:checked + .toggle-track { background: #34c759; }
+.toggle-switch input:checked + .toggle-track::after { transform: translateX(12px); }
 
 /* ── Color Cards ── */
 .cards-area { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: var(--cards-gap); }
@@ -216,6 +251,7 @@ h1 span { display: block; color: var(--lavender); font-style: italic; font-weigh
   </header>
 
   <div class="dice-section">
+    <div class="die-anchor">
     <div class="dice-wrapper" id="dice-wrapper" onclick="roll()" tabindex="0" role="button" aria-label="Lancer le dé">
       <div class="dice-scene">
         <div class="dice-cube" id="dice-cube">
@@ -301,6 +337,14 @@ h1 span { display: block; color: var(--lavender); font-style: italic; font-weigh
         </div>
       </div>
       <div class="dice-shadow"></div>
+    </div>
+    <div class="noir-toggle">
+      <span class="noir-pastille"></span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="noir-toggle-input">
+        <span class="toggle-track"></span>
+      </label>
+    </div>
     </div>
 
     <div class="dice-hint" id="dice-hint">Cliquer pour lancer</div>
@@ -412,7 +456,10 @@ async function roll() {
   const cardsArea = document.getElementById('cards-area');
   cardsArea.innerHTML = '';
   scaleCards(N);
-  pickN(COLORS, N).forEach((color, i) => {
+  const pool = document.getElementById('noir-toggle-input').checked
+    ? [...COLORS, { name: 'Noir', hex: '#111111' }]
+    : COLORS;
+  pickN(pool, N).forEach((color, i) => {
     const card = document.createElement('div');
     card.className = 'color-swatch';
     card.style.background = color.hex;
